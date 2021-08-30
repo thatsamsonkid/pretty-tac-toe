@@ -15,9 +15,15 @@ code {
 
 :root {
   --primary-pink: #f76884;
+  --secondary-pink: #9f354a;
 }
 
 .page-heading {
   text-align: center;
   color: var(--primary-pink);
+  font-size: 2.8rem;
+}
+
+.text-center {
+  text-align: center;
 }
