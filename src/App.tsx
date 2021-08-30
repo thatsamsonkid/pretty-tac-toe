@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./App.css";
 import Tile from "./ui/Tile";
 import styled from "styled-components";

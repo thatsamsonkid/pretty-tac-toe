@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { TIC_TAC_RESPONSE } from "../models/TicTacToe";
 
 const TileSquare = styled.div`
   width: 100%;
@@ -60,35 +61,35 @@ const EmptyTile = styled.div`
   border-radius: 4rem;
 `;
 
+function setTile(value: string) {
+  if (value === TIC_TAC_RESPONSE.X) {
+    return <XTile></XTile>;
+  } else if (value === TIC_TAC_RESPONSE.O) {
+    return <OTile></OTile>;
+  } else {
+    return <EmptyTile></EmptyTile>;
+  }
+}
+
 function Tile(props: any) {
   const [tileValue, setTileValue]: [Element | null, any] = useState(null);
 
-  const setTile = () => {
-    if (props.value === "X") {
-      setTileValue(<XTile></XTile>);
-    } else if (props.value === "O") {
-      setTileValue(<OTile></OTile>);
-    } else {
-      setTileValue(<EmptyTile></EmptyTile>);
-    }
-  };
-
   useEffect(() => {
-    setTile();
+    setTileValue(setTile(props.value));
   }, [props.value]);
 
   const onMouseOverHandler = () => {
     if (!props.value) {
-      if (props.player === "X") {
+      if (props.player === TIC_TAC_RESPONSE.X) {
         setTileValue(<XTile className="tile-preview"></XTile>);
       }
-      if (props.player === "O") {
+      if (props.player === TIC_TAC_RESPONSE.O) {
         setTileValue(<OTile className="tile-preview"></OTile>);
       }
     }
   };
 
-  const onMouseLeaveHandler = () => setTile();
+  const onMouseLeaveHandler = () => setTileValue(setTile(props.value));
 
   return (
     <TileSquare

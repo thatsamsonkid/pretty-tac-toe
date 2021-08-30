@@ -1,9 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-
-export enum TIC_TAC_RESPONSE {
-  X = "X",
-  O = "O",
-}
+import { useState, useCallback } from "react";
+import { TIC_TAC_RESPONSE } from "../models/TicTacToe";
 
 function useTicTacToe() {
   const newGameState = [
