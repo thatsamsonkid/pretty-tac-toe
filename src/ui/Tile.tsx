@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { TIC_TAC_RESPONSE } from "../models/TicTacToe";
+import { TILE_STATES } from "../models/TicTacToe";
 
 const TileSquare = styled.div`
   width: 100%;
@@ -61,10 +61,10 @@ const EmptyTile = styled.div`
   border-radius: 4rem;
 `;
 
-function setTile(value: string) {
-  if (value === TIC_TAC_RESPONSE.X) {
+function setTile(value: TILE_STATES) {
+  if (value === TILE_STATES.X) {
     return <XTile></XTile>;
-  } else if (value === TIC_TAC_RESPONSE.O) {
+  } else if (value === TILE_STATES.O) {
     return <OTile></OTile>;
   } else {
     return <EmptyTile></EmptyTile>;
@@ -79,11 +79,11 @@ function Tile(props: any) {
   }, [props.value]);
 
   const onMouseOverHandler = () => {
-    if (!props.value) {
-      if (props.player === TIC_TAC_RESPONSE.X) {
+    if (!props.value && !props.winner) {
+      if (props.player === TILE_STATES.X) {
         setTileValue(<XTile className="tile-preview"></XTile>);
       }
-      if (props.player === TIC_TAC_RESPONSE.O) {
+      if (props.player === TILE_STATES.O) {
         setTileValue(<OTile className="tile-preview"></OTile>);
       }
     }
@@ -95,7 +95,7 @@ function Tile(props: any) {
     <TileSquare
       onMouseEnter={onMouseOverHandler}
       onMouseLeave={onMouseLeaveHandler}
-      onClick={() => props.onClick(props.coordinates)}
+      onClick={() => !props.value && props.onClick(props.coordinates)}
     >
       {tileValue}
     </TileSquare>

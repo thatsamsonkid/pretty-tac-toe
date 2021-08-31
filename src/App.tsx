@@ -3,6 +3,7 @@ import "./App.css";
 import Tile from "./ui/Tile";
 import styled from "styled-components";
 import useTicTacToe from "./hooks/TicTacToe";
+import { TILE_STATES } from "./models/TicTacToe";
 
 const BoardBorder = styled.div`
   padding: 3rem 5.6rem;
@@ -47,7 +48,13 @@ const ButtonReset = styled.button`
 `;
 
 function App() {
-  const { resetGame, player, gameState, handleTileClick } = useTicTacToe();
+  const { resetGame, player, gameState, handleTileClick, winner, staleMate } =
+    useTicTacToe();
+
+  const winningPlayer = winner === TILE_STATES.X ? "X" : "O";
+  const winnerMessage = winner ? <h2>Winner, player {winningPlayer}</h2> : null;
+
+  const staleMateMessage = staleMate ? <h2>GAMEOVER!, STALEMATE!</h2> : null;
 
   const board = gameState.map((row, i) => {
     const drawrow = row.map((tile, j) => (
@@ -55,7 +62,10 @@ function App() {
         key={`row-${i}-tile-${j}`}
         player={player}
         value={tile}
-        onClick={(coordinates: Array<number>) => handleTileClick(coordinates)}
+        winner={winner}
+        onClick={(coordinates: Array<number>) =>
+          !winner && handleTileClick(coordinates)
+        }
         coordinates={[i, j]}
       ></Tile>
     ));
@@ -66,6 +76,10 @@ function App() {
     <PageLayout>
       <div>
         <h1 className="page-heading">Pretty Tac Toe</h1>
+      </div>
+      <div className="text-center">
+        {winnerMessage}
+        {staleMateMessage}
       </div>
       <BoardBorder>
         <BoardBackground>{board}</BoardBackground>

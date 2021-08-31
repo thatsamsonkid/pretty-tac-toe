@@ -8,11 +8,6 @@ body {
   font-size: 10px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
 :root {
   --primary-pink: #f76884;
   --secondary-pink: #9f354a;

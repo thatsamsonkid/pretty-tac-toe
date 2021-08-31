@@ -1,4 +1,5 @@
-export enum TIC_TAC_RESPONSE {
-  X = "X",
-  O = "O",
+export enum TILE_STATES {
+  X = 1,
+  O = -1,
+  EMPTY = 0,
 }

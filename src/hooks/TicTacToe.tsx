@@ -1,25 +1,35 @@
 import { useState, useCallback } from "react";
-import { TIC_TAC_RESPONSE } from "../models/TicTacToe";
+import { TILE_STATES } from "../models/TicTacToe";
 
 function useTicTacToe() {
   const newGameState = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
+    [TILE_STATES.EMPTY, TILE_STATES.EMPTY, TILE_STATES.EMPTY],
+    [TILE_STATES.EMPTY, TILE_STATES.EMPTY, TILE_STATES.EMPTY],
+    [TILE_STATES.EMPTY, TILE_STATES.EMPTY, TILE_STATES.EMPTY],
   ];
 
-  const [gameState, setGameState]: [Array<Array<string | null>>, any] =
-    useState([...newGameState]);
+  const [gameState, setGameState]: [Array<Array<TILE_STATES>>, any] = useState([
+    ...newGameState,
+  ]);
 
   // randomized
-  const [player, setPlayer] = useState("X");
+  const [player, setPlayer] = useState(TILE_STATES.X);
+  const [winner, setWinner]: [TILE_STATES | null, any] = useState(null);
+  const [staleMate, setStaleMate]: [boolean, any] = useState(false);
+  const [playCount, setPlayCount]: [number, any] = useState(0);
 
-  const resetGame = () => setGameState([...newGameState]);
+  const resetGame = () => {
+    setWinner(null);
+    setGameState([...newGameState]);
+    setStaleMate(null);
+    setPlayCount(0);
+  };
 
   const handleTileClick = useCallback(
     (coordinates: Array<number>) => {
+      setPlayCount(playCount + 1);
       const updateStateWithPlay = (
-        player: string,
+        player: TILE_STATES,
         coordinates: Array<number>
       ) => {
         const newState = gameState.map((row) => row);
@@ -27,12 +37,62 @@ function useTicTacToe() {
         setGameState([...newState]);
       };
 
+      const checkForWin = (
+        gameState: Array<Array<TILE_STATES>>,
+        coordinates: Array<number>
+      ) => {
+        const [x, y] = coordinates;
+
+        let yAccum = 0;
+        let xAccum = 0;
+        gameState[x].forEach((tileState) => {
+          if (tileState !== TILE_STATES.EMPTY) {
+            const currValue = tileState === TILE_STATES.X ? 1 : -1;
+            xAccum = xAccum + currValue;
+          }
+        });
+
+        for (let i = 0; i < gameState[x].length; i++) {
+          if (gameState[i][y] !== TILE_STATES.EMPTY) {
+            const currValue = gameState[i][y] === TILE_STATES.X ? 1 : -1;
+            yAccum = yAccum + currValue;
+          }
+        }
+
+        // TODO: Check Diagonal win
+        // for (let i = 0; i < gameState[x].length; i++) {
+        //   if (gameState[i][0] !== TILE_STATES.EMPTY) {
+        //     const currValue = gameState[i][0] === TILE_STATES.X ? 1 : -1;
+        //     yAccum = yAccum + currValue;
+        //   }
+        // }
+
+        // TODO: Save history in Session
+        // TODO: Create clickable history
+
+        if (xAccum === 3 || yAccum === 3 || xAccum === -3 || yAccum === -3) {
+          if (xAccum === 3 || yAccum === 3) {
+            setWinner(TILE_STATES.X);
+          }
+
+          if (xAccum === -3 || yAccum === -3) {
+            setWinner(TILE_STATES.O);
+          }
+        } else {
+          playCount === 8 && setStaleMate(true);
+        }
+      };
+
       updateStateWithPlay(player, coordinates);
-      player === TIC_TAC_RESPONSE.X
-        ? setPlayer(TIC_TAC_RESPONSE.O)
-        : setPlayer(TIC_TAC_RESPONSE.X);
+
+      //check for win
+      checkForWin(gameState, coordinates);
+
+      player === TILE_STATES.X
+        ? setPlayer(TILE_STATES.O)
+        : setPlayer(TILE_STATES.X);
     },
-    [gameState, player]
+    [gameState, player, playCount]
   );
 
   return {
@@ -42,6 +102,8 @@ function useTicTacToe() {
     setPlayer,
     gameState,
     setGameState,
+    winner,
+    staleMate,
   };
 }
 
