@@ -59,23 +59,53 @@ function useTicTacToe() {
           }
         }
 
-        // TODO: Check Diagonal win
-        // for (let i = 0; i < gameState[x].length; i++) {
-        //   if (gameState[i][0] !== TILE_STATES.EMPTY) {
-        //     const currValue = gameState[i][0] === TILE_STATES.X ? 1 : -1;
-        //     yAccum = yAccum + currValue;
-        //   }
-        // }
+        const boardDiagonalSize = 3;
+        let diagAccum = 0;
+        for (let i = 0; i < boardDiagonalSize; i++) {
+          if (gameState[i][i] !== TILE_STATES.EMPTY) {
+            const currValue = gameState[i][i] === TILE_STATES.X ? 1 : -1;
+            diagAccum = diagAccum + currValue;
+          }
+        }
+
+        let oppDiagAccum = 0;
+        let j = boardDiagonalSize;
+        for (let i = 0; i < boardDiagonalSize; i++) {
+          j--;
+          if (gameState[i][j] !== TILE_STATES.EMPTY) {
+            const currValue = gameState[i][j] === TILE_STATES.X ? 1 : -1;
+            oppDiagAccum = oppDiagAccum + currValue;
+          }
+        }
 
         // TODO: Save history in Session
         // TODO: Create clickable history
 
-        if (xAccum === 3 || yAccum === 3 || xAccum === -3 || yAccum === -3) {
-          if (xAccum === 3 || yAccum === 3) {
+        if (
+          xAccum === 3 ||
+          yAccum === 3 ||
+          xAccum === -3 ||
+          yAccum === -3 ||
+          diagAccum === 3 ||
+          diagAccum === -3 ||
+          oppDiagAccum === 3 ||
+          oppDiagAccum === -3
+        ) {
+          if (
+            xAccum === 3 ||
+            yAccum === 3 ||
+            diagAccum === 3 ||
+            oppDiagAccum === 3
+          ) {
             setWinner(TILE_STATES.X);
           }
 
-          if (xAccum === -3 || yAccum === -3) {
+          if (
+            xAccum === -3 ||
+            yAccum === -3 ||
+            diagAccum === -3 ||
+            oppDiagAccum === -3
+          ) {
             setWinner(TILE_STATES.O);
           }
         } else {
